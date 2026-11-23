@@ -1,0 +1,101 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">Administration - PharmaGes</ui:define>
+
+        <ui:define name="body">
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">Administration des Utilisateurs</h1>
+                    <p style="color: var(--text-muted); font-size: 14px;">Gestion des comptes et des rôles de sécurité JAAS (GÉRANT / EMPLOYÉ).</p>
+                </div>
+            </div>
+
+            <!-- Formulaire de création d'utilisateur -->
+            <div class="panel">
+                <div class="panel-title">
+                    <span>Créer un Utilisateur</span>
+                </div>
+
+                <h:form id="createUserForm">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                        <div class="form-group">
+                            <label>Identifiant de Connexion *</label>
+                            <h:inputText value="#{adminBean.nouvelUtilisateur.idUtilisateur}" required="true"
+                                         requiredMessage="Identifiant requis" styleClass="form-control" />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Nom *</label>
+                            <h:inputText value="#{adminBean.nouvelUtilisateur.nom}" required="true"
+                                         requiredMessage="Nom requis" styleClass="form-control" />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Prénom *</label>
+                            <h:inputText value="#{adminBean.nouvelUtilisateur.prenom}" required="true"
+                                         requiredMessage="Prénom requis" styleClass="form-control" />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Mot de Passe *</label>
+                            <h:inputSecret value="#{adminBean.nouvelUtilisateur.motDePasse}" required="true"
+                                           requiredMessage="Mot de passe requis" styleClass="form-control" />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Rôle / Type Utilisateur *</label>
+                            <h:selectOneMenu value="#{adminBean.nouvelUtilisateur.typeUtilisateur}" styleClass="form-control">
+                                <f:selectItem itemValue="EMPLOYE" itemLabel="EMPLOYE (Pharmacien Vendeur)" />
+                                <f:selectItem itemValue="GERANT" itemLabel="GERANT (Administrateur)" />
+                            </h:selectOneMenu>
+                        </div>
+
+                        <div class="form-group" style="display: flex; align-items: flex-end;">
+                            <h:commandButton value="+ Enregistrer le Compte" action="#{adminBean.enregistrerUtilisateur}"
+                                             styleClass="btn-primary" style="width: 100%; padding: 10px;" />
+                        </div>
+                    </div>
+                </h:form>
+            </div>
+
+            <!-- Liste des utilisateurs enregistrés -->
+            <div class="panel" style="margin-top: 25px;">
+                <div class="panel-title">
+                    <span>Comptes Utilisateurs Enregistrés</span>
+                </div>
+
+                <h:form id="tableUsersForm">
+                    <h:dataTable value="#{adminBean.utilisateurs}" var="user"
+                                 styleClass="data-table" headerClass="th">
+                        <h:column>
+                            <f:facet name="header">Identifiant</f:facet>
+                            <strong><h:outputText value="#{user.idUtilisateur}" /></strong>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Nom &amp; Prénom</f:facet>
+                            <h:outputText value="#{user.prenom} #{user.nom}" />
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Rôle JAAS</f:facet>
+                            <span class="user-role-pill #{user.typeUtilisateur eq 'GERANT' ? 'admin' : ''}">
+                                <h:outputText value="#{user.typeUtilisateur}" />
+                            </span>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Actions</f:facet>
+                            <h:commandButton value="Supprimer" action="#{adminBean.supprimer(user)}"
+                                             styleClass="btn-sm btn-danger"
+                                             onclick="return confirm('Confirmer la suppression de cet utilisateur ?');" />
+                        </h:column>
+                    </h:dataTable>
+                </h:form>
+            </div>
+        </ui:define>
+    </ui:composition>
+</html>

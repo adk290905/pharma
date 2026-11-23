@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundle.ListLigneEchangeTitle}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:form styleClass="jsfcrud_list_form">
+                <h:panelGroup id="messagePanel" layout="block">
+                    <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+                </h:panelGroup>
+                <h:outputText escape="false" value="#{bundle.ListLigneEchangeEmpty}" rendered="#{ligneEchangeController.items.rowCount == 0}"/>
+                <h:panelGroup rendered="#{ligneEchangeController.items.rowCount > 0}">
+                    <h:outputText value="#{ligneEchangeController.pagination.pageFirstItem + 1}..#{ligneEchangeController.pagination.pageLastItem + 1}/#{ligneEchangeController.pagination.itemsCount}"/>&nbsp;
+                    <h:commandLink action="#{ligneEchangeController.previous}" value="#{bundle.Previous} #{ligneEchangeController.pagination.pageSize}" rendered="#{ligneEchangeController.pagination.hasPreviousPage}"/>&nbsp;
+                    <h:commandLink action="#{ligneEchangeController.next}" value="#{bundle.Next} #{ligneEchangeController.pagination.pageSize}" rendered="#{ligneEchangeController.pagination.hasNextPage}"/>&nbsp;
+                    <h:dataTable value="#{ligneEchangeController.items}" var="item" border="0" cellpadding="2" cellspacing="0" rowClasses="jsfcrud_odd_row,jsfcrud_even_row" rules="all" style="border:solid 1px">
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListLigneEchangeTitle_quantite}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.quantite}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListLigneEchangeTitle_echange}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.echange}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListLigneEchangeTitle_produit}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.produit}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="&nbsp;"/>
+                            </f:facet>
+                            <h:commandLink action="#{ligneEchangeController.prepareView}" value="#{bundle.ListLigneEchangeViewLink}"/>
+                            <h:outputText value=" "/>
+                            <h:commandLink action="#{ligneEchangeController.prepareEdit}" value="#{bundle.ListLigneEchangeEditLink}"/>
+                            <h:outputText value=" "/>
+                            <h:commandLink action="#{ligneEchangeController.destroy}" value="#{bundle.ListLigneEchangeDestroyLink}"/>
+                        </h:column>
+                    </h:dataTable>
+                </h:panelGroup>
+                <br />
+                <h:commandLink action="#{ligneEchangeController.prepareCreate}" value="#{bundle.ListLigneEchangeCreateLink}"/>
+                <br />
+                <br />
+                <h:link outcome="/index" value="#{bundle.ListLigneEchangeIndexLink}"/>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>

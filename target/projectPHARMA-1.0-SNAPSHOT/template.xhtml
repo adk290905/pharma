@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title><ui:insert name="title">PharmaGes - Gestion de Pharmacie</ui:insert></title>
+        <h:outputStylesheet library="css" name="style-app.css" />
+        <ui:insert name="head" />
+    </h:head>
+
+    <h:body>
+        <!-- En-tête de navigation principale (Header responsive en CSS pur) -->
+        <header class="app-header">
+            <h:link outcome="/index.xhtml" styleClass="brand-section">
+                <h:graphicImage library="css" name="pharma.jpeg" alt="Logo Pharmacie" />
+                <span class="brand-title">PharmaGes</span>
+            </h:link>
+
+            <nav class="app-nav">
+                <ul>
+                    <li><h:link outcome="/index.xhtml" value="Accueil" /></li>
+                    <li><h:link outcome="/vente.xhtml" value="Vente (Comptoir)" /></li>
+                    <li><h:link outcome="/stock.xhtml" value="Gestion Stock" /></li>
+                    <li><h:link outcome="/caisse.xhtml" value="Caisse &amp; Règlements" /></li>
+                    <li><h:link outcome="/echanges.xhtml" value="Échanges" /></li>
+                    <li><h:link outcome="/bons.xhtml" value="Bons de Commande" /></li>
+                    
+                    <!-- Navigation réservée au GÉRANT -->
+                    <h:panelGroup rendered="#{authBean.gerant}">
+                        <li><h:link outcome="/admin.xhtml" value="Administration" styleClass="admin-link" /></li>
+                    </h:panelGroup>
+                </ul>
+            </nav>
+
+            <div class="user-badge">
+                <div style="text-align: right;">
+                    <div style="font-weight: 600; font-size: 14px;">
+                        <h:outputText value="#{authBean.nomComplet}" />
+                    </div>
+                    <span class="user-role-pill #{authBean.gerant ? 'admin' : ''}">
+                        <h:outputText value="#{authBean.role}" />
+                    </span>
+                </div>
+                <h:form id="logoutForm" style="display:inline; margin: 0; padding: 0;">
+                    <h:commandLink action="#{authBean.logout}" value="Déconnexion" styleClass="btn-logout" />
+                </h:form>
+            </div>
+        </header>
+
+        <!-- Contenu principal -->
+        <main class="container">
+            <h:panelGroup id="globalMessagePanel" layout="block" rendered="#{facesContext.maximumSeverity != null}">
+                <div style="margin-bottom: 20px;">
+                    <h:messages globalOnly="true" infoClass="alert alert-success" errorClass="alert alert-danger"
+                                warnClass="alert alert-warning" layout="table" style="width: 100%; border: none;" />
+                </div>
+            </h:panelGroup>
+
+            <ui:insert name="body">Contenu de la page</ui:insert>
+        </main>
+
+        <footer style="text-align: center; padding: 25px 0; color: var(--text-muted); font-size: 13px; border-top: 1px solid #e0e0e0; margin-top: 40px;">
+            <p>&copy; 2026 PharmaGes &bull; Système de Gestion de Pharmacie J2EE / JSF &bull; Base PostgreSQL</p>
+        </footer>
+    </h:body>
+</html>

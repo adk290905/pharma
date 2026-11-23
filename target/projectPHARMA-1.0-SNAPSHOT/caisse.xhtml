@@ -1,0 +1,103 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">Journal de Caisse - PharmaGes</ui:define>
+
+        <ui:define name="body">
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">Journal de Caisse &amp; Règlements</h1>
+                    <p style="color: var(--text-muted); font-size: 14px;">Suivi des encaissements, transactions et réédition des factures de vente.</p>
+                </div>
+                <div>
+                    <h:link outcome="/vente.xhtml" styleClass="btn-primary" value="+ Nouvelle Vente" />
+                </div>
+            </div>
+
+            <!-- Statistiques financières de caisse -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Chiffre d'Affaires Global</div>
+                    <div class="stat-value" style="color: var(--success-color);">
+                        <h:outputText value="#{caisseBean.totalChiffreAffaires}">
+                            <f:convertNumber pattern="#,##0 FCFA" />
+                        </h:outputText>
+                    </div>
+                    <small style="color: var(--text-muted);">Total de toutes les ventes réglées</small>
+                </div>
+
+                <div class="stat-card info">
+                    <div class="stat-label">Total Encaissé Aujourd'hui</div>
+                    <div class="stat-value" style="color: var(--info-color);">
+                        <h:outputText value="#{caisseBean.ventesAujourdhui}">
+                            <f:convertNumber pattern="#,##0 FCFA" />
+                        </h:outputText>
+                    </div>
+                    <small style="color: var(--text-muted);">Journal de la journée en cours</small>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-label">Nombre de Transactions</div>
+                    <div class="stat-value">
+                        <h:outputText value="#{caisseBean.nombreVentes}" />
+                    </div>
+                    <small style="color: var(--text-muted);">Ventes enregistrées</small>
+                </div>
+            </div>
+
+            <!-- Historique des ventes -->
+            <div class="panel" style="margin-top: 25px;">
+                <div class="panel-title">
+                    <span>Historique des Ventes &amp; Factures</span>
+                </div>
+
+                <h:form id="caisseForm">
+                    <h:dataTable value="#{caisseBean.ventes}" var="v"
+                                 styleClass="data-table" headerClass="th">
+                        <h:column>
+                            <f:facet name="header">N° Vente</f:facet>
+                            <strong><h:outputText value="#{v.idV}" /></strong>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Date &amp; Heure</f:facet>
+                            <h:outputText value="#{v.dateVente}">
+                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+                            </h:outputText>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Pharmacien / Vendeur</f:facet>
+                            <h:outputText value="#{v.idUtilisateur.prenom} #{v.idUtilisateur.nom}" rendered="#{v.idUtilisateur != null}" />
+                            <h:outputText value="Opérateur" rendered="#{v.idUtilisateur == null}" />
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Désignation / Résumé</f:facet>
+                            <h:outputText value="#{v.nomC}" />
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Quantité</f:facet>
+                            <h:outputText value="#{v.qte}" />
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Montant Total</f:facet>
+                            <span style="font-weight: 700; color: var(--secondary-color);">
+                                <h:outputText value="#{v.total}">
+                                    <f:convertNumber pattern="#,##0 FCFA" />
+                                </h:outputText>
+                            </span>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Action Facture</f:facet>
+                            <h:commandLink action="#{caisseBean.imprimerFacture(v)}" value="Facture PDF"
+                                           styleClass="btn-sm btn-secondary" target="_blank" />
+                        </h:column>
+                    </h:dataTable>
+                </h:form>
+            </div>
+        </ui:define>
+    </ui:composition>
+</html>

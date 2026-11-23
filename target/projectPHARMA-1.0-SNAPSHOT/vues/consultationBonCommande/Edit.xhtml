@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundle.EditConsultationBonCommandeTitle}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:panelGroup id="messagePanel" layout="block">
+                <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+            </h:panelGroup>
+            <h:form>
+                <h:panelGrid columns="2">
+                    <h:outputLabel value="#{bundle.EditConsultationBonCommandeLabel_consultationBonCommandePK_dateConsultation}" for="consultationBonCommandePK_dateConsultation" />
+                    <h:inputText id="consultationBonCommandePK_dateConsultation" value="#{consultationBonCommandeController.selected.consultationBonCommandePK.dateConsultation}" title="#{bundle.EditConsultationBonCommandeTitle_consultationBonCommandePK_dateConsultation}" required="true" requiredMessage="#{bundle.EditConsultationBonCommandeRequiredMessage_consultationBonCommandePK_dateConsultation}">
+                        <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                    </h:inputText>
+                    <h:outputLabel value="#{bundle.EditConsultationBonCommandeLabel_bonDeCommande}" for="bonDeCommande" />
+                    <h:selectOneMenu id="bonDeCommande" value="#{consultationBonCommandeController.selected.bonDeCommande}" title="#{bundle.EditConsultationBonCommandeTitle_bonDeCommande}" required="true" requiredMessage="#{bundle.EditConsultationBonCommandeRequiredMessage_bonDeCommande}">
+                        <f:selectItems value="#{bonDeCommandeController.itemsAvailableSelectOne}"/>
+                    </h:selectOneMenu>
+                    <h:outputLabel value="#{bundle.EditConsultationBonCommandeLabel_utilisateur}" for="utilisateur" />
+                    <h:selectOneMenu id="utilisateur" value="#{consultationBonCommandeController.selected.utilisateur}" title="#{bundle.EditConsultationBonCommandeTitle_utilisateur}" required="true" requiredMessage="#{bundle.EditConsultationBonCommandeRequiredMessage_utilisateur}">
+                        <f:selectItems value="#{utilisateurController.itemsAvailableSelectOne}"/>
+                    </h:selectOneMenu>
+                </h:panelGrid>
+                <h:commandLink action="#{consultationBonCommandeController.update}" value="#{bundle.EditConsultationBonCommandeSaveLink}"/>
+                <br />
+                <br />
+                <h:link outcome="View" value="#{bundle.EditConsultationBonCommandeViewLink}"/>
+                <br />
+                <h:commandLink action="#{consultationBonCommandeController.prepareList}" value="#{bundle.EditConsultationBonCommandeShowAllLink}" immediate="true"/>
+                <br />
+                <br />
+                <h:link outcome="/index" value="#{bundle.EditConsultationBonCommandeIndexLink}" />
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>

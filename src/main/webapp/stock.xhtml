@@ -1,0 +1,174 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">Gestion du Stock - PharmaGes</ui:define>
+
+        <ui:define name="body">
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">Gestion des Stocks</h1>
+                    <p style="color: var(--text-muted); font-size: 14px;">Inventaire des médicaments, réapprovisionnements et alertes d'expiration.</p>
+                </div>
+                <div>
+                    <h:link outcome="/vente.xhtml" styleClass="btn-primary" value="Aller au Comptoir de Vente" />
+                </div>
+            </div>
+
+            <!-- Statistiques des stocks -->
+            <div class="stats-grid">
+                <div class="stat-card info">
+                    <div class="stat-label">Total Médicaments</div>
+                    <div class="stat-value">
+                        <h:outputText value="#{stockController.totalMedicaments}" />
+                    </div>
+                    <small style="color: var(--text-muted);">Références en base</small>
+                </div>
+
+                <div class="stat-card warning">
+                    <div class="stat-label">Stock Faible (&le; 5)</div>
+                    <div class="stat-value" style="color: var(--warning-color);">
+                        <h:outputText value="#{stockController.stockFaible}" />
+                    </div>
+                    <small style="color: var(--text-muted);">Attention réassort</small>
+                </div>
+
+                <div class="stat-card danger">
+                    <div class="stat-label">En Rupture</div>
+                    <div class="stat-value" style="color: var(--danger-color);">
+                        <h:outputText value="#{stockController.rupture}" />
+                    </div>
+                    <small style="color: var(--text-muted);">Stock épuisé (0)</small>
+                </div>
+            </div>
+
+            <!-- Formulaire d'ajout de nouveau produit -->
+            <div class="panel" style="margin-top: 25px;">
+                <div class="panel-title">
+                    <span>Enregistrer un Nouveau Médicament</span>
+                </div>
+
+                <h:form id="addProduitForm">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                        <div class="form-group">
+                            <label>Numéro de Lot *</label>
+                            <h:inputText value="#{stockController.nouveauProduit.NLot}" required="true"
+                                         requiredMessage="N° lot obligatoire" styleClass="form-control" />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Nom Commercial *</label>
+                            <h:inputText value="#{stockController.nouveauProduit.nomC}" required="true"
+                                         requiredMessage="Nom obligatoire" styleClass="form-control" />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Quantité Initiale *</label>
+                            <h:inputText value="#{stockController.nouveauProduit.qte}" required="true"
+                                         styleClass="form-control" />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Prix Public (PPA) *</label>
+                            <h:inputText value="#{stockController.nouveauProduit.ppa}" required="true"
+                                         styleClass="form-control" />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Date d'Expiration *</label>
+                            <h:inputText value="#{stockController.nouveauProduit.dateExp}" required="true" styleClass="form-control">
+                                <f:convertDateTime pattern="yyyy-MM-dd" />
+                                <f:passThroughAttribute name="type" value="date" />
+                            </h:inputText>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Dosage</label>
+                            <h:inputText value="#{stockController.nouveauProduit.dosage}" styleClass="form-control" />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Conditionnement</label>
+                            <h:inputText value="#{stockController.nouveauProduit.conditionnement}" styleClass="form-control" />
+                        </div>
+
+                        <div class="form-group" style="display: flex; align-items: flex-end;">
+                            <h:commandButton value="+ Ajouter au Stock" action="#{stockController.enregistrerProduit}"
+                                             styleClass="btn-primary" style="width: 100%; padding: 10px;" />
+                        </div>
+                    </div>
+                </h:form>
+            </div>
+
+            <!-- Liste des produits en stock -->
+            <div class="panel" style="margin-top: 25px;">
+                <div class="panel-title">
+                    <span>Inventaire des Produits</span>
+                </div>
+
+                <h:form id="filtreForm" style="margin-bottom: 15px;">
+                    <div class="form-inline">
+                        <h:inputText value="#{stockController.searchFilter}" styleClass="form-control" style="flex: 1;">
+                            <f:passThroughAttribute name="placeholder" value="Filtrer par lot ou par nom..." />
+                            <f:ajax event="keyup" delay="250" render=":stockTableForm:tableStock" />
+                        </h:inputText>
+                    </div>
+                </h:form>
+
+                <h:form id="stockTableForm">
+                    <h:dataTable id="tableStock" value="#{stockController.produits}" var="item"
+                                 styleClass="data-table" headerClass="th">
+                        <h:column>
+                            <f:facet name="header">N° Lot</f:facet>
+                            <strong><h:outputText value="#{item.NLot}" /></strong>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Désignation</f:facet>
+                            <h:outputText value="#{item.nomC}" />
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Dosage &amp; Cond.</f:facet>
+                            <span style="font-size: 13px; color: var(--text-muted);">
+                                <h:outputText value="#{item.dosage} - #{item.conditionnement}" />
+                            </span>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">PPA (FCFA)</f:facet>
+                            <h:outputText value="#{item.ppa}">
+                                <f:convertNumber pattern="#,##0" />
+                            </h:outputText>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Expiration</f:facet>
+                            <h:outputText value="#{item.dateExp}">
+                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                            </h:outputText>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Stock</f:facet>
+                            <span class="stock-badge #{item.qte le 0 ? 'rupture' : (item.qte le 5 ? 'faible' : 'ok')}">
+                                <h:outputText value="#{item.qte}" />
+                            </span>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Actions</f:facet>
+                            <div style="display: flex; gap: 6px;">
+                                <h:commandButton value="+10" action="#{stockController.reapprovisionner(item)}"
+                                                 styleClass="btn-sm btn-secondary" title="Réapprovisionner +10 unités">
+                                    <f:ajax execute="@this" render=":stockTableForm:tableStock :globalMessagePanel" />
+                                </h:commandButton>
+                                <h:commandButton value="Supprimer" action="#{stockController.supprimer(item)}"
+                                                 styleClass="btn-sm btn-danger"
+                                                 onclick="return confirm('Confirmer la suppression de ce produit ?');" />
+                            </div>
+                        </h:column>
+                    </h:dataTable>
+                </h:form>
+            </div>
+        </ui:define>
+    </ui:composition>
+</html>

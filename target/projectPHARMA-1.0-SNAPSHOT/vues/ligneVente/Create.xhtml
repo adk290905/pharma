@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundle.CreateLigneVenteTitle}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:panelGroup id="messagePanel" layout="block">
+                <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+            </h:panelGroup>
+            <h:form>
+                <h:panelGrid columns="2">
+                    <h:outputLabel value="#{bundle.CreateLigneVenteLabel_quantite}" for="quantite" />
+                    <h:inputText id="quantite" value="#{ligneVenteController.selected.quantite}" title="#{bundle.CreateLigneVenteTitle_quantite}" required="true" requiredMessage="#{bundle.CreateLigneVenteRequiredMessage_quantite}"/>
+                    <h:outputLabel value="#{bundle.CreateLigneVenteLabel_prixUnitaire}" for="prixUnitaire" />
+                    <h:inputText id="prixUnitaire" value="#{ligneVenteController.selected.prixUnitaire}" title="#{bundle.CreateLigneVenteTitle_prixUnitaire}" required="true" requiredMessage="#{bundle.CreateLigneVenteRequiredMessage_prixUnitaire}"/>
+                    <h:outputLabel value="#{bundle.CreateLigneVenteLabel_produit}" for="produit" />
+                    <h:selectOneMenu id="produit" value="#{ligneVenteController.selected.produit}" title="#{bundle.CreateLigneVenteTitle_produit}" required="true" requiredMessage="#{bundle.CreateLigneVenteRequiredMessage_produit}">
+                        <f:selectItems value="#{produitController.itemsAvailableSelectOne}"/>
+                    </h:selectOneMenu>
+                    <h:outputLabel value="#{bundle.CreateLigneVenteLabel_vente}" for="vente" />
+                    <h:selectOneMenu id="vente" value="#{ligneVenteController.selected.vente}" title="#{bundle.CreateLigneVenteTitle_vente}" required="true" requiredMessage="#{bundle.CreateLigneVenteRequiredMessage_vente}">
+                        <f:selectItems value="#{venteController.itemsAvailableSelectOne}"/>
+                    </h:selectOneMenu>
+                </h:panelGrid>
+                <br />
+                <h:commandLink action="#{ligneVenteController.create}" value="#{bundle.CreateLigneVenteSaveLink}" />
+                <br />
+                <br />
+                <h:commandLink action="#{ligneVenteController.prepareList}" value="#{bundle.CreateLigneVenteShowAllLink}" immediate="true"/>
+                <br />
+                <br />
+                <h:link outcome="/index" value="#{bundle.CreateLigneVenteIndexLink}"/>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>

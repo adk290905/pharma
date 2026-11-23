@@ -1,0 +1,97 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Connexion - PharmaGes</title>
+        <h:outputStylesheet library="css" name="form.css" />
+        <style>
+            body {
+                background: url("#{resource['img.jpeg']}") no-repeat center center fixed !important;
+                background-size: cover !important;
+            }
+            .alert-box {
+                background: rgba(231, 76, 60, 0.4);
+                border: 1px solid #e74c3c;
+                color: #ffffff;
+                padding: 10px;
+                border-radius: 8px;
+                margin-bottom: 20px;
+                font-size: 14px;
+                text-align: center;
+            }
+            .alert-box ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+            .brand-logo-login {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                margin-bottom: 15px;
+            }
+            .brand-logo-login img {
+                width: 60px;
+                height: 60px;
+                object-fit: contain;
+                margin-bottom: 8px;
+            }
+            .brand-logo-login span {
+                font-size: 24px;
+                font-weight: 700;
+                color: rgb(89, 199, 73);
+            }
+        </style>
+    </h:head>
+    <h:body>
+        <div class="wrapper">
+            <h:form id="loginForm">
+                <div class="brand-logo-login">
+                    <h:graphicImage library="css" name="pharma.jpeg" alt="Logo Pharmacie" />
+                    <span>PharmaGes</span>
+                </div>
+                
+                <h1>Connexion</h1>
+
+                <h:panelGroup id="msgPanel" layout="block" rendered="#{facesContext.maximumSeverity != null}">
+                    <div class="alert-box">
+                        <h:messages globalOnly="true" layout="vertical" />
+                    </div>
+                </h:panelGroup>
+
+                <div class="input-box">
+                    <h:inputText id="username" value="#{authBean.username}" required="true"
+                                 requiredMessage="Identifiant requis"
+                                 autocomplete="username">
+                        <f:passThroughAttribute name="placeholder" value="Identifiant (ex: gerant1, emp1)" />
+                    </h:inputText>
+                </div>
+
+                <div class="input-box">
+                    <h:inputSecret id="password" value="#{authBean.password}" required="true"
+                                   requiredMessage="Mot de passe requis"
+                                   autocomplete="current-password">
+                        <f:passThroughAttribute name="placeholder" value="Mot de passe" />
+                    </h:inputSecret>
+                </div>
+
+                <div class="remember-forgot">
+                    <label>
+                        <input type="checkbox" /> Se souvenir de moi
+                    </label>
+                    <a href="#">Rôles: GÉRANT / EMPLOYÉ</a>
+                </div>
+
+                <h:commandButton value="Se connecter" action="#{authBean.login}" styleClass="btn" />
+
+                <div class="register-link" style="margin-top: 20px; font-size: 13px; opacity: 0.85;">
+                    <p>Système sécurisé JAAS &bull; Gestion Pharmacie</p>
+                </div>
+            </h:form>
+        </div>
+    </h:body>
+</html>

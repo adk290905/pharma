@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundle.ViewProduitTitle}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:panelGroup id="messagePanel" layout="block">
+                <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+            </h:panelGroup>
+            <h:form>
+                <h:panelGrid columns="2">
+                    <h:outputText value="#{bundle.ViewProduitLabel_NLot}"/>
+                    <h:outputText value="#{produitController.selected.NLot}" title="#{bundle.ViewProduitTitle_NLot}"/>
+                    <h:outputText value="#{bundle.ViewProduitLabel_nomC}"/>
+                    <h:outputText value="#{produitController.selected.nomC}" title="#{bundle.ViewProduitTitle_nomC}"/>
+                    <h:outputText value="#{bundle.ViewProduitLabel_qte}"/>
+                    <h:outputText value="#{produitController.selected.qte}" title="#{bundle.ViewProduitTitle_qte}"/>
+                    <h:outputText value="#{bundle.ViewProduitLabel_ppa}"/>
+                    <h:outputText value="#{produitController.selected.ppa}" title="#{bundle.ViewProduitTitle_ppa}"/>
+                    <h:outputText value="#{bundle.ViewProduitLabel_dateExp}"/>
+                    <h:outputText value="#{produitController.selected.dateExp}" title="#{bundle.ViewProduitTitle_dateExp}">
+                        <f:convertDateTime pattern="MM/dd/yyyy" />
+                    </h:outputText>
+                    <h:outputText value="#{bundle.ViewProduitLabel_dosage}"/>
+                    <h:outputText value="#{produitController.selected.dosage}" title="#{bundle.ViewProduitTitle_dosage}"/>
+                    <h:outputText value="#{bundle.ViewProduitLabel_conditionnement}"/>
+                    <h:outputText value="#{produitController.selected.conditionnement}" title="#{bundle.ViewProduitTitle_conditionnement}"/>
+                    <h:outputText value="#{bundle.ViewProduitLabel_idUtilisateurEnreg}"/>
+                    <h:outputText value="#{produitController.selected.idUtilisateurEnreg}" title="#{bundle.ViewProduitTitle_idUtilisateurEnreg}"/>
+                </h:panelGrid>
+                <br />
+                <h:commandLink action="#{produitController.destroyAndView}" value="#{bundle.ViewProduitDestroyLink}"/>
+                <br />
+                <br />
+                <h:link outcome="Edit" value="#{bundle.ViewProduitEditLink}"/>
+                <br />
+                <h:commandLink action="#{produitController.prepareCreate}" value="#{bundle.ViewProduitCreateLink}" />
+                <br />
+                <h:commandLink action="#{produitController.prepareList}" value="#{bundle.ViewProduitShowAllLink}"/>
+                <br />
+                <br />
+                <h:link outcome="/index" value="#{bundle.ViewProduitIndexLink}"/>
+
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>

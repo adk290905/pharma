@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundle.ViewEchangeTitle}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:panelGroup id="messagePanel" layout="block">
+                <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+            </h:panelGroup>
+            <h:form>
+                <h:panelGrid columns="2">
+                    <h:outputText value="#{bundle.ViewEchangeLabel_idEchange}"/>
+                    <h:outputText value="#{echangeController.selected.idEchange}" title="#{bundle.ViewEchangeTitle_idEchange}"/>
+                    <h:outputText value="#{bundle.ViewEchangeLabel_idPh}"/>
+                    <h:outputText value="#{echangeController.selected.idPh}" title="#{bundle.ViewEchangeTitle_idPh}"/>
+                    <h:outputText value="#{bundle.ViewEchangeLabel_nomPh}"/>
+                    <h:outputText value="#{echangeController.selected.nomPh}" title="#{bundle.ViewEchangeTitle_nomPh}"/>
+                    <h:outputText value="#{bundle.ViewEchangeLabel_typeEchange}"/>
+                    <h:outputText value="#{echangeController.selected.typeEchange}" title="#{bundle.ViewEchangeTitle_typeEchange}"/>
+                    <h:outputText value="#{bundle.ViewEchangeLabel_dateEchange}"/>
+                    <h:outputText value="#{echangeController.selected.dateEchange}" title="#{bundle.ViewEchangeTitle_dateEchange}">
+                        <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                    </h:outputText>
+                    <h:outputText value="#{bundle.ViewEchangeLabel_idGerant}"/>
+                    <h:outputText value="#{echangeController.selected.idGerant}" title="#{bundle.ViewEchangeTitle_idGerant}"/>
+                </h:panelGrid>
+                <br />
+                <h:commandLink action="#{echangeController.destroyAndView}" value="#{bundle.ViewEchangeDestroyLink}"/>
+                <br />
+                <br />
+                <h:link outcome="Edit" value="#{bundle.ViewEchangeEditLink}"/>
+                <br />
+                <h:commandLink action="#{echangeController.prepareCreate}" value="#{bundle.ViewEchangeCreateLink}" />
+                <br />
+                <h:commandLink action="#{echangeController.prepareList}" value="#{bundle.ViewEchangeShowAllLink}"/>
+                <br />
+                <br />
+                <h:link outcome="/index" value="#{bundle.ViewEchangeIndexLink}"/>
+
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>

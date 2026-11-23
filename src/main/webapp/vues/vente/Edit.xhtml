@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundle.EditVenteTitle}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:panelGroup id="messagePanel" layout="block">
+                <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+            </h:panelGroup>
+            <h:form>
+                <h:panelGrid columns="2">
+                    <h:outputLabel value="#{bundle.EditVenteLabel_idV}" for="idV" />
+                    <h:inputText id="idV" value="#{venteController.selected.idV}" title="#{bundle.EditVenteTitle_idV}" required="true" requiredMessage="#{bundle.EditVenteRequiredMessage_idV}"/>
+                    <h:outputLabel value="#{bundle.EditVenteLabel_nomC}" for="nomC" />
+                    <h:inputText id="nomC" value="#{venteController.selected.nomC}" title="#{bundle.EditVenteTitle_nomC}" />
+                    <h:outputLabel value="#{bundle.EditVenteLabel_qte}" for="qte" />
+                    <h:inputText id="qte" value="#{venteController.selected.qte}" title="#{bundle.EditVenteTitle_qte}" required="true" requiredMessage="#{bundle.EditVenteRequiredMessage_qte}"/>
+                    <h:outputLabel value="#{bundle.EditVenteLabel_ppa}" for="ppa" />
+                    <h:inputText id="ppa" value="#{venteController.selected.ppa}" title="#{bundle.EditVenteTitle_ppa}" required="true" requiredMessage="#{bundle.EditVenteRequiredMessage_ppa}"/>
+                    <h:outputLabel value="#{bundle.EditVenteLabel_total}" for="total" />
+                    <h:inputText id="total" value="#{venteController.selected.total}" title="#{bundle.EditVenteTitle_total}" required="true" requiredMessage="#{bundle.EditVenteRequiredMessage_total}"/>
+                    <h:outputLabel value="#{bundle.EditVenteLabel_dateVente}" for="dateVente" />
+                    <h:inputText id="dateVente" value="#{venteController.selected.dateVente}" title="#{bundle.EditVenteTitle_dateVente}" required="true" requiredMessage="#{bundle.EditVenteRequiredMessage_dateVente}">
+                        <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                    </h:inputText>
+                    <h:outputLabel value="#{bundle.EditVenteLabel_idUtilisateur}" for="idUtilisateur" />
+                    <h:selectOneMenu id="idUtilisateur" value="#{venteController.selected.idUtilisateur}" title="#{bundle.EditVenteTitle_idUtilisateur}" required="true" requiredMessage="#{bundle.EditVenteRequiredMessage_idUtilisateur}">
+                        <f:selectItems value="#{utilisateurController.itemsAvailableSelectOne}"/>
+                    </h:selectOneMenu>
+                </h:panelGrid>
+                <h:commandLink action="#{venteController.update}" value="#{bundle.EditVenteSaveLink}"/>
+                <br />
+                <br />
+                <h:link outcome="View" value="#{bundle.EditVenteViewLink}"/>
+                <br />
+                <h:commandLink action="#{venteController.prepareList}" value="#{bundle.EditVenteShowAllLink}" immediate="true"/>
+                <br />
+                <br />
+                <h:link outcome="/index" value="#{bundle.EditVenteIndexLink}" />
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>

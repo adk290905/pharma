@@ -1,0 +1,106 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">Échanges Inter-Pharmacies - PharmaGes</ui:define>
+
+        <ui:define name="body">
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">Échanges Inter-Pharmacies</h1>
+                    <p style="color: var(--text-muted); font-size: 14px;">Gestion des dépannages, réceptions (entrant) et cessions (sortant) avec mise à jour automatique des stocks.</p>
+                </div>
+            </div>
+
+            <!-- Formulaire d'enregistrement d'échange -->
+            <div class="panel">
+                <div class="panel-title">
+                    <span>Nouvel Échange Inter-Pharmacie</span>
+                </div>
+
+                <h:form id="echangeForm">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px;">
+                        <div class="form-group">
+                            <label>Identifiant Pharmacie Partenaire *</label>
+                            <h:inputText value="#{echangeBean.nouvelEchange.idPh}" required="true"
+                                         requiredMessage="ID Pharmacie requis" styleClass="form-control" />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Nom Pharmacie Partenaire *</label>
+                            <h:inputText value="#{echangeBean.nouvelEchange.nomPh}" required="true"
+                                         requiredMessage="Nom Pharmacie requis" styleClass="form-control" />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Type d'Échange *</label>
+                            <h:selectOneMenu value="#{echangeBean.nouvelEchange.typeEchange}" styleClass="form-control">
+                                <f:selectItem itemValue="ENTRANT" itemLabel="ENTRANT (Réception / Entrée en Stock)" />
+                                <f:selectItem itemValue="SORTANT" itemLabel="SORTANT (Dépannage / Sortie de Stock)" />
+                            </h:selectOneMenu>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Médicament concerné *</label>
+                            <h:selectOneMenu value="#{echangeBean.selectedLot}" styleClass="form-control" required="true">
+                                <f:selectItem itemValue="" itemLabel="-- Choisir un médicament --" />
+                                <f:selectItems value="#{stockController.produits}" var="p"
+                                               itemValue="#{p.NLot}" itemLabel="#{p.nomC} (Lot: #{p.NLot} - Stock: #{p.qte})" />
+                            </h:selectOneMenu>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Quantité échangée *</label>
+                            <h:inputText value="#{echangeBean.quantiteEchange}" required="true" styleClass="form-control" />
+                        </div>
+
+                        <div class="form-group" style="display: flex; align-items: flex-end;">
+                            <h:commandButton value="Valider l'Échange" action="#{echangeBean.enregistrerEchange}"
+                                             styleClass="btn-primary" style="width: 100%; padding: 10px;" />
+                        </div>
+                    </div>
+                </h:form>
+            </div>
+
+            <!-- Historique des échanges -->
+            <div class="panel" style="margin-top: 25px;">
+                <div class="panel-title">
+                    <span>Historique des Échanges</span>
+                </div>
+
+                <h:dataTable value="#{echangeBean.echanges}" var="ech"
+                             styleClass="data-table" headerClass="th">
+                    <h:column>
+                        <f:facet name="header">N° Échange</f:facet>
+                        <strong><h:outputText value="#{ech.idEchange}" /></strong>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Date</f:facet>
+                        <h:outputText value="#{ech.dateEchange}">
+                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+                        </h:outputText>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Pharmacie Partenaire</f:facet>
+                        <h:outputText value="#{ech.nomPh}" />
+                        <small style="color: var(--text-muted); display: block;">ID: #{ech.idPh}</small>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Type</f:facet>
+                        <span class="user-role-pill #{ech.typeEchange eq 'SORTANT' ? 'admin' : ''}">
+                            <h:outputText value="#{ech.typeEchange}" />
+                        </span>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Gérant Validateur</f:facet>
+                        <h:outputText value="#{ech.idGerant.prenom} #{ech.idGerant.nom}" rendered="#{ech.idGerant != null}" />
+                    </h:column>
+                </h:dataTable>
+            </div>
+        </ui:define>
+    </ui:composition>
+</html>

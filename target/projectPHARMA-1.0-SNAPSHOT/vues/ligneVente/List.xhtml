@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundle.ListLigneVenteTitle}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:form styleClass="jsfcrud_list_form">
+                <h:panelGroup id="messagePanel" layout="block">
+                    <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+                </h:panelGroup>
+                <h:outputText escape="false" value="#{bundle.ListLigneVenteEmpty}" rendered="#{ligneVenteController.items.rowCount == 0}"/>
+                <h:panelGroup rendered="#{ligneVenteController.items.rowCount > 0}">
+                    <h:outputText value="#{ligneVenteController.pagination.pageFirstItem + 1}..#{ligneVenteController.pagination.pageLastItem + 1}/#{ligneVenteController.pagination.itemsCount}"/>&nbsp;
+                    <h:commandLink action="#{ligneVenteController.previous}" value="#{bundle.Previous} #{ligneVenteController.pagination.pageSize}" rendered="#{ligneVenteController.pagination.hasPreviousPage}"/>&nbsp;
+                    <h:commandLink action="#{ligneVenteController.next}" value="#{bundle.Next} #{ligneVenteController.pagination.pageSize}" rendered="#{ligneVenteController.pagination.hasNextPage}"/>&nbsp;
+                    <h:dataTable value="#{ligneVenteController.items}" var="item" border="0" cellpadding="2" cellspacing="0" rowClasses="jsfcrud_odd_row,jsfcrud_even_row" rules="all" style="border:solid 1px">
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListLigneVenteTitle_quantite}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.quantite}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListLigneVenteTitle_prixUnitaire}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.prixUnitaire}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListLigneVenteTitle_produit}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.produit}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListLigneVenteTitle_vente}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.vente}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="&nbsp;"/>
+                            </f:facet>
+                            <h:commandLink action="#{ligneVenteController.prepareView}" value="#{bundle.ListLigneVenteViewLink}"/>
+                            <h:outputText value=" "/>
+                            <h:commandLink action="#{ligneVenteController.prepareEdit}" value="#{bundle.ListLigneVenteEditLink}"/>
+                            <h:outputText value=" "/>
+                            <h:commandLink action="#{ligneVenteController.destroy}" value="#{bundle.ListLigneVenteDestroyLink}"/>
+                        </h:column>
+                    </h:dataTable>
+                </h:panelGroup>
+                <br />
+                <h:commandLink action="#{ligneVenteController.prepareCreate}" value="#{bundle.ListLigneVenteCreateLink}"/>
+                <br />
+                <br />
+                <h:link outcome="/index" value="#{bundle.ListLigneVenteIndexLink}"/>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>

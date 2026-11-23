@@ -1,0 +1,133 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">Tableau de bord - PharmaGes</ui:define>
+
+        <ui:define name="body">
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">Tableau de bord</h1>
+                    <p style="color: var(--text-muted); font-size: 14px; margin-top: 4px;">
+                        Bienvenue, <strong>#{authBean.nomComplet}</strong> (#{authBean.role})
+                    </p>
+                </div>
+                <div>
+                    <h:link outcome="/vente.xhtml" styleClass="btn-primary" value="+ Nouvelle Vente" />
+                </div>
+            </div>
+
+            <!-- Cartes statistiques principales (CSS pur) -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Chiffre d'Affaires Global</div>
+                    <div class="stat-value" style="color: var(--primary-color);">
+                        <h:outputText value="#{caisseBean.totalChiffreAffaires}">
+                            <f:convertNumber pattern="#,##0 FCFA" />
+                        </h:outputText>
+                    </div>
+                    <small style="color: var(--text-muted);">Cumul de toutes les ventes</small>
+                </div>
+
+                <div class="stat-card info">
+                    <div class="stat-label">Ventes du Jour</div>
+                    <div class="stat-value" style="color: var(--info-color);">
+                        <h:outputText value="#{caisseBean.ventesAujourdhui}">
+                            <f:convertNumber pattern="#,##0 FCFA" />
+                        </h:outputText>
+                    </div>
+                    <small style="color: var(--text-muted);">Activité aujourd'hui</small>
+                </div>
+
+                <div class="stat-card warning">
+                    <div class="stat-label">Stock Faible (&le; 5)</div>
+                    <div class="stat-value" style="color: var(--warning-color);">
+                        <h:outputText value="#{stockController.stockFaible}" />
+                    </div>
+                    <small style="color: var(--text-muted);">Articles à réapprovisionner</small>
+                </div>
+
+                <div class="stat-card danger">
+                    <div class="stat-label">En Rupture</div>
+                    <div class="stat-value" style="color: var(--danger-color);">
+                        <h:outputText value="#{stockController.rupture}" />
+                    </div>
+                    <small style="color: var(--text-muted);">Médicaments épuisés</small>
+                </div>
+            </div>
+
+            <!-- Accès rapides aux modules -->
+            <div class="panel" style="margin-top: 25px;">
+                <div class="panel-title">
+                    <span>Navigation Rapide</span>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-top: 15px;">
+                    <h:link outcome="/vente.xhtml" style="display: block; padding: 18px; background: #fafbfc; border: 1px solid var(--border-color); border-radius: 8px; text-decoration: none; color: inherit; transition: all 0.2s;">
+                        <h3 style="color: var(--primary-color); margin-bottom: 6px;">Comptoir de Vente</h3>
+                        <p style="font-size: 13px; color: var(--text-muted);">Saisie des ordonnances, panier, impression des factures PDF.</p>
+                    </h:link>
+
+                    <h:link outcome="/stock.xhtml" style="display: block; padding: 18px; background: #fafbfc; border: 1px solid var(--border-color); border-radius: 8px; text-decoration: none; color: inherit; transition: all 0.2s;">
+                        <h3 style="color: var(--info-color); margin-bottom: 6px;">Gestion des Stocks</h3>
+                        <p style="font-size: 13px; color: var(--text-muted);">Inventaire des médicaments, lots, péremptions et réassorts.</p>
+                    </h:link>
+
+                    <h:link outcome="/caisse.xhtml" style="display: block; padding: 18px; background: #fafbfc; border: 1px solid var(--border-color); border-radius: 8px; text-decoration: none; color: inherit; transition: all 0.2s;">
+                        <h3 style="color: #27ae60; margin-bottom: 6px;">Caisse &amp; Règlements</h3>
+                        <p style="font-size: 13px; color: var(--text-muted);">Historique des transactions et réimpression des factures.</p>
+                    </h:link>
+
+                    <h:link outcome="/echanges.xhtml" style="display: block; padding: 18px; background: #fafbfc; border: 1px solid var(--border-color); border-radius: 8px; text-decoration: none; color: inherit; transition: all 0.2s;">
+                        <h3 style="color: #8e44ad; margin-bottom: 6px;">Échanges Inter-Pharma</h3>
+                        <p style="font-size: 13px; color: var(--text-muted);">Dépannages entre pharmacies (entrants et sortants).</p>
+                    </h:link>
+                </div>
+            </div>
+
+            <!-- Dernières Ventes Récentes -->
+            <div class="panel" style="margin-top: 25px;">
+                <div class="panel-title">
+                    <span>Dernières Ventes Enregistrées</span>
+                    <h:link outcome="/caisse.xhtml" value="Voir tout le journal &rarr;" style="font-size: 14px; text-decoration: none; color: var(--primary-color);" />
+                </div>
+
+                <h:form id="recenteVentesForm">
+                    <h:dataTable value="#{caisseBean.ventes}" var="v" rows="5"
+                                 styleClass="data-table" headerClass="th" rowClasses="odd,even">
+                        <h:column>
+                            <f:facet name="header">N° Vente</f:facet>
+                            <strong><h:outputText value="#{v.idV}" /></strong>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Date</f:facet>
+                            <h:outputText value="#{v.dateVente}">
+                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+                            </h:outputText>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Désignation / Résumé</f:facet>
+                            <h:outputText value="#{v.nomC}" />
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Montant Total</f:facet>
+                            <span style="font-weight: 700; color: var(--secondary-color);">
+                                <h:outputText value="#{v.total}">
+                                    <f:convertNumber pattern="#,##0 FCFA" />
+                                </h:outputText>
+                            </span>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Facture PDF</f:facet>
+                            <h:commandLink action="#{caisseBean.imprimerFacture(v)}" value="Imprimer PDF"
+                                           styleClass="btn-sm btn-secondary" target="_blank" />
+                        </h:column>
+                    </h:dataTable>
+                </h:form>
+            </div>
+        </ui:define>
+    </ui:composition>
+</html>

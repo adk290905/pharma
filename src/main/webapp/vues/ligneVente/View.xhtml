@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundle.ViewLigneVenteTitle}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:panelGroup id="messagePanel" layout="block">
+                <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+            </h:panelGroup>
+            <h:form>
+                <h:panelGrid columns="2">
+                    <h:outputText value="#{bundle.ViewLigneVenteLabel_quantite}"/>
+                    <h:outputText value="#{ligneVenteController.selected.quantite}" title="#{bundle.ViewLigneVenteTitle_quantite}"/>
+                    <h:outputText value="#{bundle.ViewLigneVenteLabel_prixUnitaire}"/>
+                    <h:outputText value="#{ligneVenteController.selected.prixUnitaire}" title="#{bundle.ViewLigneVenteTitle_prixUnitaire}"/>
+                    <h:outputText value="#{bundle.ViewLigneVenteLabel_produit}"/>
+                    <h:outputText value="#{ligneVenteController.selected.produit}" title="#{bundle.ViewLigneVenteTitle_produit}"/>
+                    <h:outputText value="#{bundle.ViewLigneVenteLabel_vente}"/>
+                    <h:outputText value="#{ligneVenteController.selected.vente}" title="#{bundle.ViewLigneVenteTitle_vente}"/>
+                </h:panelGrid>
+                <br />
+                <h:commandLink action="#{ligneVenteController.destroyAndView}" value="#{bundle.ViewLigneVenteDestroyLink}"/>
+                <br />
+                <br />
+                <h:link outcome="Edit" value="#{bundle.ViewLigneVenteEditLink}"/>
+                <br />
+                <h:commandLink action="#{ligneVenteController.prepareCreate}" value="#{bundle.ViewLigneVenteCreateLink}" />
+                <br />
+                <h:commandLink action="#{ligneVenteController.prepareList}" value="#{bundle.ViewLigneVenteShowAllLink}"/>
+                <br />
+                <br />
+                <h:link outcome="/index" value="#{bundle.ViewLigneVenteIndexLink}"/>
+
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>

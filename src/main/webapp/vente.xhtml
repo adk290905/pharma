@@ -1,0 +1,187 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">Comptoir de Vente - PharmaGes</ui:define>
+
+        <ui:define name="body">
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">Comptoir de Vente</h1>
+                    <p style="color: var(--text-muted); font-size: 14px;">Sélectionnez les médicaments et finalisez l'ordonnance ou la vente directe.</p>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <h:link outcome="/stock.xhtml" styleClass="btn-secondary" value="Consulter le Stock" />
+                </div>
+            </div>
+
+            <!-- Bloc Alerte dernière vente et impression immédiate -->
+            <h:panelGroup layout="block" rendered="#{ventePOSController.derniereVente != null}" style="margin-bottom: 20px;">
+                <div class="alert alert-success" style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <strong>Dernière Vente : </strong>
+                        Facture n° <strong>#{ventePOSController.derniereVente.idV}</strong> validée avec succès.
+                        (Montant : <strong>#{ventePOSController.derniereVente.total} FCFA</strong>)
+                    </div>
+                    <h:form id="printLastForm" style="margin: 0;">
+                        <h:commandLink action="#{ventePOSController.imprimerDerniereFacture}" value="Imprimer Facture PDF"
+                                       styleClass="btn btn-primary" target="_blank" />
+                    </h:form>
+                </div>
+            </h:panelGroup>
+
+            <!-- Layout POS : 2 colonnes (Catalogue / Panier) -->
+            <div class="pos-layout">
+
+                <!-- Colonne Gauche : Catalogue et recherche rapide -->
+                <div class="panel">
+                    <div class="panel-title">
+                        <span>Catalogue Médicaments</span>
+                    </div>
+
+                    <h:form id="searchForm" style="margin-bottom: 15px;">
+                        <div class="form-inline">
+                            <h:inputText id="searchKeyword" value="#{ventePOSController.searchKeyword}"
+                                         styleClass="form-control" style="flex: 1;">
+                                <f:passThroughAttribute name="placeholder" value="Rechercher par nom de médicament ou n° de lot..." />
+                                <f:ajax event="keyup" delay="250" listener="#{ventePOSController.rechercherProduits}" render=":catalogueForm:tableCatalogue" />
+                            </h:inputText>
+                            <h:commandButton value="Rechercher" action="#{ventePOSController.rechercherProduits}" styleClass="btn-secondary">
+                                <f:ajax execute="@form" render=":catalogueForm:tableCatalogue" />
+                            </h:commandButton>
+                        </div>
+                    </h:form>
+
+                    <h:form id="catalogueForm">
+                        <h:dataTable id="tableCatalogue" value="#{ventePOSController.catalogueResultats}" var="prod"
+                                     styleClass="data-table" headerClass="th">
+                            <h:column>
+                                <f:facet name="header">N° Lot</f:facet>
+                                <span style="font-size: 12px; color: var(--text-muted);"><h:outputText value="#{prod.NLot}" /></span>
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">Désignation</f:facet>
+                                <strong><h:outputText value="#{prod.nomC}" /></strong>
+                                <br />
+                                <small style="color: var(--text-muted);"><h:outputText value="#{prod.dosage}" /></small>
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">Prix (PPA)</f:facet>
+                                <h:outputText value="#{prod.ppa}">
+                                    <f:convertNumber pattern="#,##0 FCFA" />
+                                </h:outputText>
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">Stock</f:facet>
+                                <span class="stock-badge #{prod.qte le 0 ? 'rupture' : (prod.qte le 5 ? 'faible' : 'ok')}">
+                                    <h:outputText value="#{prod.qte}" />
+                                </span>
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">Action</f:facet>
+                                <h:commandButton value="+ Ajouter" action="#{ventePOSController.ajouterAuPanier(prod)}"
+                                                 styleClass="btn-sm btn-primary" disabled="#{prod.qte le 0}">
+                                    <f:ajax execute="@this" render=":panierForm :globalMessagePanel :printLastForm" />
+                                </h:commandButton>
+                            </h:column>
+                        </h:dataTable>
+                    </h:form>
+                </div>
+
+                <!-- Colonne Droite : Panier en cours & Encaissement -->
+                <div class="panel">
+                    <div class="panel-title">
+                        <span>Panier de Vente</span>
+                        <h:panelGroup rendered="#{not empty ventePOSController.panier}">
+                            <span class="user-role-pill">#{ventePOSController.nombreArticles} article(s)</span>
+                        </h:panelGroup>
+                    </div>
+
+                    <h:form id="panierForm">
+                        <h:panelGroup rendered="#{empty ventePOSController.panier}">
+                            <div style="text-align: center; padding: 40px 20px; color: var(--text-muted);">
+                                <p style="font-size: 16px; margin-bottom: 8px;">Le panier est actuellement vide.</p>
+                                <small>Sélectionnez un médicament dans le catalogue à gauche pour commencer.</small>
+                            </div>
+                        </h:panelGroup>
+
+                        <h:panelGroup rendered="#{not empty ventePOSController.panier}">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Médicament</th>
+                                        <th style="text-align: center;">Qté</th>
+                                        <th style="text-align: right;">P.U.</th>
+                                        <th style="text-align: right;">Sous-Total</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <ui:repeat value="#{ventePOSController.panier}" var="item" varStatus="st">
+                                        <tr>
+                                            <td>
+                                                <strong>#{item.produit.nomC}</strong>
+                                                <br />
+                                                <small style="color: var(--text-muted);">Lot: #{item.produit.NLot}</small>
+                                            </td>
+                                            <td style="text-align: center;">
+                                                <h:inputText value="#{item.quantite}" style="width: 50px; text-align: center; padding: 4px; border: 1px solid #ccc; border-radius: 4px;">
+                                                    <f:ajax event="change" render=":panierForm" />
+                                                </h:inputText>
+                                            </td>
+                                            <td style="text-align: right;">
+                                                <h:outputText value="#{item.prixUnitaire}">
+                                                    <f:convertNumber pattern="#,##0.00" />
+                                                </h:outputText>
+                                            </td>
+                                            <td style="text-align: right; font-weight: 600;">
+                                                <h:outputText value="#{item.sousTotal}">
+                                                    <f:convertNumber pattern="#,##0 FCFA" />
+                                                </h:outputText>
+                                            </td>
+                                            <td style="text-align: center;">
+                                                <h:commandLink action="#{ventePOSController.retirerDuPanier(st.index)}" value="&times;"
+                                                               style="color: var(--danger-color); font-size: 18px; text-decoration: none; font-weight: bold;">
+                                                    <f:ajax execute="@this" render=":panierForm" />
+                                                </h:commandLink>
+                                            </td>
+                                        </tr>
+                                    </ui:repeat>
+                                </tbody>
+                            </table>
+
+                            <div class="cart-summary">
+                                <div style="display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 6px;">
+                                    <span>Nombre d'articles :</span>
+                                    <strong>#{ventePOSController.nombreArticles}</strong>
+                                </div>
+                                <div class="cart-total-row">
+                                    <span>Total Net à Payer :</span>
+                                    <span>
+                                        <h:outputText value="#{ventePOSController.totalPanier}">
+                                            <f:convertNumber pattern="#,##0 FCFA" />
+                                        </h:outputText>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                                <h:commandButton value="Valider l'Encaissement" action="#{ventePOSController.validerVente}"
+                                                 styleClass="btn-primary" style="flex: 2; padding: 12px; font-size: 15px;" />
+                                <h:commandButton value="Vider" action="#{ventePOSController.viderPanier}"
+                                                 styleClass="btn-secondary" style="flex: 1;">
+                                    <f:ajax execute="@this" render=":panierForm" />
+                                </h:commandButton>
+                            </div>
+                        </h:panelGroup>
+                    </h:form>
+                </div>
+
+            </div>
+        </ui:define>
+    </ui:composition>
+</html>

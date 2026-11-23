@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundle.CreateEchangeTitle}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:panelGroup id="messagePanel" layout="block">
+                <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+            </h:panelGroup>
+            <h:form>
+                <h:panelGrid columns="2">
+                    <h:outputLabel value="#{bundle.CreateEchangeLabel_idEchange}" for="idEchange" />
+                    <h:inputText id="idEchange" value="#{echangeController.selected.idEchange}" title="#{bundle.CreateEchangeTitle_idEchange}" required="true" requiredMessage="#{bundle.CreateEchangeRequiredMessage_idEchange}"/>
+                    <h:outputLabel value="#{bundle.CreateEchangeLabel_idPh}" for="idPh" />
+                    <h:inputText id="idPh" value="#{echangeController.selected.idPh}" title="#{bundle.CreateEchangeTitle_idPh}" required="true" requiredMessage="#{bundle.CreateEchangeRequiredMessage_idPh}"/>
+                    <h:outputLabel value="#{bundle.CreateEchangeLabel_nomPh}" for="nomPh" />
+                    <h:inputText id="nomPh" value="#{echangeController.selected.nomPh}" title="#{bundle.CreateEchangeTitle_nomPh}" required="true" requiredMessage="#{bundle.CreateEchangeRequiredMessage_nomPh}"/>
+                    <h:outputLabel value="#{bundle.CreateEchangeLabel_typeEchange}" for="typeEchange" />
+                    <h:inputText id="typeEchange" value="#{echangeController.selected.typeEchange}" title="#{bundle.CreateEchangeTitle_typeEchange}" required="true" requiredMessage="#{bundle.CreateEchangeRequiredMessage_typeEchange}"/>
+                    <h:outputLabel value="#{bundle.CreateEchangeLabel_dateEchange}" for="dateEchange" />
+                    <h:inputText id="dateEchange" value="#{echangeController.selected.dateEchange}" title="#{bundle.CreateEchangeTitle_dateEchange}" required="true" requiredMessage="#{bundle.CreateEchangeRequiredMessage_dateEchange}">
+                        <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                    </h:inputText>
+                    <h:outputLabel value="#{bundle.CreateEchangeLabel_idGerant}" for="idGerant" />
+                    <h:selectOneMenu id="idGerant" value="#{echangeController.selected.idGerant}" title="#{bundle.CreateEchangeTitle_idGerant}" required="true" requiredMessage="#{bundle.CreateEchangeRequiredMessage_idGerant}">
+                        <f:selectItems value="#{utilisateurController.itemsAvailableSelectOne}"/>
+                    </h:selectOneMenu>
+                </h:panelGrid>
+                <br />
+                <h:commandLink action="#{echangeController.create}" value="#{bundle.CreateEchangeSaveLink}" />
+                <br />
+                <br />
+                <h:commandLink action="#{echangeController.prepareList}" value="#{bundle.CreateEchangeShowAllLink}" immediate="true"/>
+                <br />
+                <br />
+                <h:link outcome="/index" value="#{bundle.CreateEchangeIndexLink}"/>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>

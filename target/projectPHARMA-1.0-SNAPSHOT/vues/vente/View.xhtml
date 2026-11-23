@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundle.ViewVenteTitle}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:panelGroup id="messagePanel" layout="block">
+                <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+            </h:panelGroup>
+            <h:form>
+                <h:panelGrid columns="2">
+                    <h:outputText value="#{bundle.ViewVenteLabel_idV}"/>
+                    <h:outputText value="#{venteController.selected.idV}" title="#{bundle.ViewVenteTitle_idV}"/>
+                    <h:outputText value="#{bundle.ViewVenteLabel_nomC}"/>
+                    <h:outputText value="#{venteController.selected.nomC}" title="#{bundle.ViewVenteTitle_nomC}"/>
+                    <h:outputText value="#{bundle.ViewVenteLabel_qte}"/>
+                    <h:outputText value="#{venteController.selected.qte}" title="#{bundle.ViewVenteTitle_qte}"/>
+                    <h:outputText value="#{bundle.ViewVenteLabel_ppa}"/>
+                    <h:outputText value="#{venteController.selected.ppa}" title="#{bundle.ViewVenteTitle_ppa}"/>
+                    <h:outputText value="#{bundle.ViewVenteLabel_total}"/>
+                    <h:outputText value="#{venteController.selected.total}" title="#{bundle.ViewVenteTitle_total}"/>
+                    <h:outputText value="#{bundle.ViewVenteLabel_dateVente}"/>
+                    <h:outputText value="#{venteController.selected.dateVente}" title="#{bundle.ViewVenteTitle_dateVente}">
+                        <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                    </h:outputText>
+                    <h:outputText value="#{bundle.ViewVenteLabel_idUtilisateur}"/>
+                    <h:outputText value="#{venteController.selected.idUtilisateur}" title="#{bundle.ViewVenteTitle_idUtilisateur}"/>
+                </h:panelGrid>
+                <br />
+                <h:commandLink action="#{venteController.destroyAndView}" value="#{bundle.ViewVenteDestroyLink}"/>
+                <br />
+                <br />
+                <h:link outcome="Edit" value="#{bundle.ViewVenteEditLink}"/>
+                <br />
+                <h:commandLink action="#{venteController.prepareCreate}" value="#{bundle.ViewVenteCreateLink}" />
+                <br />
+                <h:commandLink action="#{venteController.prepareList}" value="#{bundle.ViewVenteShowAllLink}"/>
+                <br />
+                <br />
+                <h:link outcome="/index" value="#{bundle.ViewVenteIndexLink}"/>
+
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>

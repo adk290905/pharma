@@ -1,0 +1,89 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">Bons de Commande - PharmaGes</ui:define>
+
+        <ui:define name="body">
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">Bons de Commande Fournisseurs</h1>
+                    <p style="color: var(--text-muted); font-size: 14px;">Création et suivi des bons de commande avec traçabilité des consultations.</p>
+                </div>
+            </div>
+
+            <!-- Formulaire nouveau bon de commande -->
+            <div class="panel">
+                <div class="panel-title">
+                    <span>Créer un Bon de Commande</span>
+                </div>
+
+                <h:form id="bonForm">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; align-items: flex-end;">
+                        <div class="form-group">
+                            <label>Date du Bon *</label>
+                            <h:inputText value="#{bonDeCommandeBean.nouveauBon.dateBon}" required="true" styleClass="form-control">
+                                <f:convertDateTime pattern="yyyy-MM-dd" />
+                                <f:passThroughAttribute name="type" value="date" />
+                            </h:inputText>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Créateur</label>
+                            <input type="text" class="form-control" value="#{authBean.nomComplet} (Gérant)" readonly="readonly" disabled="disabled" />
+                        </div>
+
+                        <div class="form-group">
+                            <h:commandButton value="+ Enregistrer le Bon" action="#{bonDeCommandeBean.creerBon}"
+                                             styleClass="btn-primary" style="padding: 10px; width: 100%;" />
+                        </div>
+                    </div>
+                </h:form>
+            </div>
+
+            <!-- Liste des bons de commande -->
+            <div class="panel" style="margin-top: 25px;">
+                <div class="panel-title">
+                    <span>Bons de Commande Émis</span>
+                </div>
+
+                <h:form id="tableBonsForm">
+                    <h:dataTable value="#{bonDeCommandeBean.bons}" var="bon"
+                                 styleClass="data-table" headerClass="th">
+                        <h:column>
+                            <f:facet name="header">N° Bon</f:facet>
+                            <strong><h:outputText value="#{bon.idBon}" /></strong>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Date</f:facet>
+                            <h:outputText value="#{bon.dateBon}">
+                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                            </h:outputText>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Gérant Créateur</f:facet>
+                            <h:outputText value="#{bon.idGerantCreateur.prenom} #{bon.idGerantCreateur.nom}" rendered="#{bon.idGerantCreateur != null}" />
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Consultations</f:facet>
+                            <span class="user-role-pill">
+                                #{bon.consultationBonCommandeList != null ? bon.consultationBonCommandeList.size() : 0} consultation(s)
+                            </span>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Action</f:facet>
+                            <h:commandButton value="Marquer comme consulté" action="#{bonDeCommandeBean.consulterBon(bon)}"
+                                             styleClass="btn-sm btn-secondary">
+                                <f:ajax execute="@this" render=":tableBonsForm :globalMessagePanel" />
+                            </h:commandButton>
+                        </h:column>
+                    </h:dataTable>
+                </h:form>
+            </div>
+        </ui:define>
+    </ui:composition>
+</html>
