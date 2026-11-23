@@ -30,17 +30,6 @@
         <welcome-file>faces/index.xhtml</welcome-file>
     </welcome-file-list>
 
-    <!-- Définition standard de la DataSource PostgreSQL au niveau applicatif (auto-enregistrée dans WildFly) -->
-    <data-source>
-        <name>java:app/datasources/PostgresDS</name>
-        <class-name>org.postgresql.ds.PGSimpleDataSource</class-name>
-        <server-name>localhost</server-name>
-        <port-number>5432</port-number>
-        <database-name>pharmacie_db</database-name>
-        <user>postgres</user>
-        <password>Ruben@dk290905</password>
-    </data-source>
-
     <!-- Déclaration des rôles de sécurité JAAS -->
     <security-role>
         <description>Rôle de direction de la pharmacie</description>

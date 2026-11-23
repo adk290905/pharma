@@ -4,7 +4,7 @@
              xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd">
   <!-- Define Persistence Unit -->
   <persistence-unit name="my_persistence_unit" transaction-type="JTA">
-    <jta-data-source>java:app/datasources/PostgresDS</jta-data-source>
+    <jta-data-source>java:/jdbc/PostgresDS</jta-data-source>
     <class>entities.Utilisateur</class>
     <class>entities.Produit</class>
     <class>entities.Vente</class>
@@ -15,8 +15,8 @@
     <class>entities.LigneEchange</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
-      <!-- "none" pour conserver précieusement les utilisateurs et données sans les vider au déploiement -->
-      <property name="jakarta.persistence.schema-generation.database.action" value="none"/>
+      <!-- Met à jour automatiquement le schéma PostgreSQL sans supprimer les données existantes -->
+      <property name="jakarta.persistence.schema-generation.database.action" value="update"/>
       <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
     </properties>
   </persistence-unit>
